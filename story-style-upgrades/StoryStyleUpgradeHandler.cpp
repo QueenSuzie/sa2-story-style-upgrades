@@ -262,25 +262,41 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 	iron_gate[Upgrades_EggmanProtectiveArmor] = false;
 	iron_gate[Upgrades_EggmanMysticMelody] = false;
 
-	this->levelUpgrades[LevelIDs_IronGate] = iron_gate;
-	this->levelUpgrades[LevelIDs_SandOcean] = iron_gate;
-
-	if (!this->includeCurrentLevelUpgrade) {
-		this->levelUpgrades[LevelIDs_LostColony] = iron_gate;
-	}
-
 	std::unordered_map<Upgrades, bool> weapons_bed;
 	weapons_bed[Upgrades_EggmanJetEngine] = true;
 	weapons_bed[Upgrades_EggmanLargeCannon] = false;
 	weapons_bed[Upgrades_EggmanLaserBlaster] = false;
 	weapons_bed[Upgrades_EggmanProtectiveArmor] = false;
-	weapons_bed[Upgrades_EggmanMysticMelody] = false;
-
-	this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
-	this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
+	weapons_bed[Upgrades_EggmanMysticMelody] = true;
 
 	if (this->includeCurrentLevelUpgrade) {
+		this->levelUpgrades[LevelIDs_IronGate] = iron_gate;
+
+		std::unordered_map<Upgrades, bool> sand_ocean;
+		sand_ocean[Upgrades_EggmanJetEngine] = false;
+		sand_ocean[Upgrades_EggmanLargeCannon] = false;
+		sand_ocean[Upgrades_EggmanLaserBlaster] = false;
+		sand_ocean[Upgrades_EggmanProtectiveArmor] = false;
+		sand_ocean[Upgrades_EggmanMysticMelody] = true;
+
+		this->levelUpgrades[LevelIDs_SandOcean] = sand_ocean;
 		this->levelUpgrades[LevelIDs_LostColony] = weapons_bed;
+		this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
+		this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
+	} else {
+		this->levelUpgrades[LevelIDs_IronGate] = iron_gate;
+		this->levelUpgrades[LevelIDs_SandOcean] = iron_gate;
+
+		std::unordered_map<Upgrades, bool> lost_colony;
+		lost_colony[Upgrades_EggmanJetEngine] = false;
+		lost_colony[Upgrades_EggmanLargeCannon] = false;
+		lost_colony[Upgrades_EggmanLaserBlaster] = false;
+		lost_colony[Upgrades_EggmanProtectiveArmor] = false;
+		lost_colony[Upgrades_EggmanMysticMelody] = true;
+
+		this->levelUpgrades[LevelIDs_LostColony] = lost_colony;
+		this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
+		this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
 	}
 }
 
