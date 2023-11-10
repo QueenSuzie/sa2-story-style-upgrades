@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ConfigSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonicretro.org">
+	<Groups>
+		<Group name="General" display="General">
+			<Property name="IncludeCurrentLevelUpgrade" type="bool" defaultvalue="False" display="Include Current Level Upgrade" alwaysinclude="true">
+				<HelpText>When enabled you will not have to obtain the upgrade contained in this stage. For example at the start of Metal Harbor you will normally have no upgrades and need to get lightdash. With this enabled you will have light dash from the start at Metal Harbor.</HelpText>
+			</Property>
+			<Property name="DisableAllShadowUpgrades" type="bool" defaultvalue="False" display="Disable All Shadow Upgrades" alwaysinclude="true">
+				<HelpText>When enabled Shadow will never have any upgrades in any stage.</HelpText>
+			</Property>
+			<Property name="DisableSonicFlameRing" type="bool" defaultvalue="False" display="Disable Sonic Flame Ring" alwaysinclude="true">
+				<HelpText>When enabled Sonic will never have the flame ring upgrade in any stage.</HelpText>
+			</Property>
+		</Group>
+	</Groups>
+</ConfigSchema>

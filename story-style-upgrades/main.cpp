@@ -8,9 +8,10 @@ extern "C" {
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		bool includeCurrentLevelUpgrade = config->getBool("General", "IncludeCurrentLevelUpgrade", false);
 		bool disableAllShadowUpgrades = config->getBool("General", "DisableAllShadowUpgrades", false);
+		bool disableSonicFlameRing = config->getBool("General", "DisableSonicFlameRing", false);
 		delete config;
 
-		UpgradeHandler.init(includeCurrentLevelUpgrade, disableAllShadowUpgrades);
+		UpgradeHandler.init(includeCurrentLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing);
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame() {

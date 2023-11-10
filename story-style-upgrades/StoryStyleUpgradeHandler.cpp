@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "StoryStyleUpgradeHandler.h"
 
-void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades) {
+void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing) {
 	this->includeCurrentLevelUpgrade = includeCurrentLevelUpgrade;
 	this->disableAllShadowUpgrades = disableAllShadowUpgrades;
+	this->disableSonicFlameRing = disableSonicFlameRing;
 
 	this->initCharacterUpgrades();
 	this->initSonicUpgrades();
@@ -126,7 +127,7 @@ void StoryStyleUpgradeHandler::initSonicUpgrades() {
 	final_rush[Upgrades_SonicLightShoes] = true;
 	final_rush[Upgrades_SonicAncientLight] = false;
 	final_rush[Upgrades_SonicMagicGloves] = false;
-	final_rush[Upgrades_SonicFlameRing] = true;
+	final_rush[Upgrades_SonicFlameRing] = !this->disableSonicFlameRing;
 	final_rush[Upgrades_SonicBounceBracelet] = true;
 	final_rush[Upgrades_SonicMysticMelody] = false;
 
