@@ -118,7 +118,7 @@ void StoryStyleUpgradeHandler::initSonicUpgrades() {
 		this->levelUpgrades[LevelIDs_CrazyGadget] = crazy_gadget;
 	}
 
-	if (!this->includeCurrentLevelUpgrade) {
+	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_PyramidCave] = crazy_gadget;
 	}
 
@@ -132,9 +132,19 @@ void StoryStyleUpgradeHandler::initSonicUpgrades() {
 
 	this->levelUpgrades[LevelIDs_FinalRush] = final_rush;
 
-	if (!this->includeCurrentLevelUpgrade) {
+	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_CrazyGadget] = final_rush;
 	}
+
+	std::unordered_map<Upgrades, bool> green_hill;
+	green_hill[Upgrades_SonicLightShoes] = false;
+	green_hill[Upgrades_SonicAncientLight] = false;
+	green_hill[Upgrades_SonicMagicGloves] = false;
+	green_hill[Upgrades_SonicFlameRing] = false;
+	green_hill[Upgrades_SonicBounceBracelet] = true;
+	green_hill[Upgrades_SonicMysticMelody] = false;
+
+	this->levelUpgrades[LevelIDs_GreenHill] = green_hill;
 }
 
 void StoryStyleUpgradeHandler::initTailsUpgrades() {
