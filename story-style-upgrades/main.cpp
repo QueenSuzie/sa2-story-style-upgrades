@@ -15,7 +15,7 @@ extern "C" {
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame() {
-		if (GameState == GameStates_Loading && canSetUpgrades) {
+		if ((GameState == GameStates_Loading || GameState == GameStates_LoadItems) && canSetUpgrades) {
 			UpgradeHandler.setLevelUpgrades();
 			canSetUpgrades = false;
 		}
