@@ -132,6 +132,7 @@ void StoryStyleUpgradeHandler::initSonicUpgrades() {
 	final_rush[Upgrades_SonicMysticMelody] = false;
 
 	this->levelUpgrades[LevelIDs_FinalRush] = final_rush;
+	this->levelUpgrades[LevelIDs_SonicVsShadow2] = final_rush;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_CrazyGadget] = final_rush;
@@ -263,6 +264,8 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 	iron_gate[Upgrades_EggmanProtectiveArmor] = false;
 	iron_gate[Upgrades_EggmanMysticMelody] = false;
 
+	this->levelUpgrades[LevelIDs_IronGate] = iron_gate;
+
 	std::unordered_map<Upgrades, bool> weapons_bed;
 	weapons_bed[Upgrades_EggmanJetEngine] = true;
 	weapons_bed[Upgrades_EggmanLargeCannon] = false;
@@ -270,9 +273,23 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 	weapons_bed[Upgrades_EggmanProtectiveArmor] = false;
 	weapons_bed[Upgrades_EggmanMysticMelody] = true;
 
-	if (this->includeCurrentLevelUpgrade) {
-		this->levelUpgrades[LevelIDs_IronGate] = iron_gate;
+	this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
+	this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
+	this->levelUpgrades[LevelIDs_EggGolemE] = weapons_bed;
 
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanJetEngine] = true;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanLargeCannon] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanLaserBlaster] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanProtectiveArmor] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanMysticMelody] = true;
+
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanJetEngine] = true;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanLargeCannon] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanLaserBlaster] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanProtectiveArmor] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanMysticMelody] = true;
+
+	if (this->includeCurrentLevelUpgrade) {
 		std::unordered_map<Upgrades, bool> sand_ocean;
 		sand_ocean[Upgrades_EggmanJetEngine] = false;
 		sand_ocean[Upgrades_EggmanLargeCannon] = false;
@@ -282,10 +299,7 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 
 		this->levelUpgrades[LevelIDs_SandOcean] = sand_ocean;
 		this->levelUpgrades[LevelIDs_LostColony] = weapons_bed;
-		this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
-		this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
 	} else {
-		this->levelUpgrades[LevelIDs_IronGate] = iron_gate;
 		this->levelUpgrades[LevelIDs_SandOcean] = iron_gate;
 
 		std::unordered_map<Upgrades, bool> lost_colony;
@@ -296,8 +310,6 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 		lost_colony[Upgrades_EggmanMysticMelody] = true;
 
 		this->levelUpgrades[LevelIDs_LostColony] = lost_colony;
-		this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
-		this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
 	}
 }
 
@@ -321,6 +333,12 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 	security_hall[Upgrades_RougeMysticMelody] = false;
 
 	this->levelUpgrades[LevelIDs_SecurityHall] = security_hall;
+	this->levelUpgrades[LevelIDs_FlyingDog] = security_hall;
+
+	this->levelUpgrades[LevelIDs_KnucklesVsRouge][Upgrades_RougePickNails] = true;
+	this->levelUpgrades[LevelIDs_KnucklesVsRouge][Upgrades_RougeTreasureScope] = false;
+	this->levelUpgrades[LevelIDs_KnucklesVsRouge][Upgrades_RougeIronBoots] = true;
+	this->levelUpgrades[LevelIDs_KnucklesVsRouge][Upgrades_RougeMysticMelody] = false;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_EggQuarters] = security_hall;
