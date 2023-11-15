@@ -12,7 +12,7 @@ void StageLoadHook(task* tp) {
 	UpgradeHandler.setLevelUpgrades();
 }
 
-void StageUnloadHook(task* tp) {
+void StageCompletedHook(task* tp) {
 	UpgradeHandler.restoreLevelUpgrades();
 
 	hloadResultScreen.Original(tp);
@@ -20,7 +20,7 @@ void StageUnloadHook(task* tp) {
 
 void StageLoadUnloadHook(task* tp) {
 	// Only on exit game or game over.
-	if (GameState == GameStates_NormalExit || GameState == GameStates_Pause) {
+	if (GameState == GameStates_Exit_1 || GameState == GameStates_NormalExit || GameState == GameStates_Pause) {
 		UpgradeHandler.restoreLevelUpgrades();
 	}
 
@@ -41,7 +41,7 @@ void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disabl
 	this->initRougeUpgrades();
 
 	hStageLoad.Hook(StageLoadHook);
-	hloadResultScreen.Hook(StageUnloadHook);
+	hloadResultScreen.Hook(StageCompletedHook);
 	hStageLoadUnloadHandler.Hook(StageLoadUnloadHook);
 }
 
@@ -163,6 +163,7 @@ void StoryStyleUpgradeHandler::initSonicUpgrades() {
 
 	this->levelUpgrades[LevelIDs_FinalRush] = final_rush;
 	this->levelUpgrades[LevelIDs_SonicVsShadow2] = final_rush;
+	this->levelUpgrades[LevelIDs_CannonsCoreS] = final_rush;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_CrazyGadget] = final_rush;
@@ -202,6 +203,7 @@ void StoryStyleUpgradeHandler::initTailsUpgrades() {
 	this->levelUpgrades[LevelIDs_HiddenBase] = hidden_base;
 	this->levelUpgrades[LevelIDs_EternalEngine] = hidden_base;
 	this->levelUpgrades[LevelIDs_TailsVsEggman2] = hidden_base;
+	this->levelUpgrades[LevelIDs_CannonsCoreT] = hidden_base;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_MissionStreet] = hidden_base;
@@ -249,6 +251,7 @@ void StoryStyleUpgradeHandler::initKnucklesUpgrades() {
 	this->levelUpgrades[LevelIDs_KingBoomBoo] = meteor_herd;
 	this->levelUpgrades[LevelIDs_MeteorHerd] = meteor_herd;
 	this->levelUpgrades[LevelIDs_KnucklesVsRouge] = meteor_herd;
+	this->levelUpgrades[LevelIDs_CannonsCoreK] = meteor_herd;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_DeathChamber] = meteor_herd;
@@ -306,18 +309,9 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 	this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
 	this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
 	this->levelUpgrades[LevelIDs_EggGolemE] = weapons_bed;
-
-	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanJetEngine] = true;
-	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanLargeCannon] = false;
-	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanLaserBlaster] = false;
-	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanProtectiveArmor] = false;
-	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanMysticMelody] = true;
-
-	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanJetEngine] = true;
-	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanLargeCannon] = false;
-	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanLaserBlaster] = false;
-	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanProtectiveArmor] = false;
-	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanMysticMelody] = true;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1] = weapons_bed;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2] = weapons_bed;
+	this->levelUpgrades[LevelIDs_CannonsCoreE] = weapons_bed;
 
 	if (this->includeCurrentLevelUpgrade) {
 		std::unordered_map<Upgrades, bool> sand_ocean;
@@ -370,19 +364,20 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 	this->levelUpgrades[LevelIDs_KnucklesVsRouge][Upgrades_RougeIronBoots] = true;
 	this->levelUpgrades[LevelIDs_KnucklesVsRouge][Upgrades_RougeMysticMelody] = false;
 
+	std::unordered_map<Upgrades, bool> mad_space;
+	mad_space[Upgrades_RougePickNails] = true;
+	mad_space[Upgrades_RougeTreasureScope] = false;
+	mad_space[Upgrades_RougeIronBoots] = true;
+	mad_space[Upgrades_RougeMysticMelody] = false;
+
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_EggQuarters] = security_hall;
-
-		std::unordered_map<Upgrades, bool> mad_space;
-		mad_space[Upgrades_RougePickNails] = true;
-		mad_space[Upgrades_RougeTreasureScope] = false;
-		mad_space[Upgrades_RougeIronBoots] = true;
-		mad_space[Upgrades_RougeMysticMelody] = false;
-
 		this->levelUpgrades[LevelIDs_MadSpace] = mad_space;
 	} else {
 		this->levelUpgrades[LevelIDs_MadSpace] = security_hall;
 	}
+
+	this->levelUpgrades[LevelIDs_CannonsCoreR] = mad_space;
 }
 
 void StoryStyleUpgradeHandler::setLevelUpgrades() {
