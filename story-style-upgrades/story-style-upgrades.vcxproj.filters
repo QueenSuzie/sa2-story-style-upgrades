@@ -24,6 +24,9 @@
     <ClInclude Include="StoryStyleUpgradeHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -38,5 +41,9 @@
     <ClCompile Include="StoryStyleUpgradeHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\configschema.xml" />
+    <CopyFileToFolders Include="..\mod.ini" />
   </ItemGroup>
 </Project>
