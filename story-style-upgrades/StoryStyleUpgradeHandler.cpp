@@ -8,8 +8,7 @@ FunctionHook<void, task*> hGameStateHandler((intptr_t)GameStateHandler);
 
 void StageLoadHook(task* tp) {
 	hStageLoad.Original(tp);
-	int t = GameState;
-	Life_Count[0] = 1;
+
 	UpgradeHandler.setLevelUpgrades();
 }
 
