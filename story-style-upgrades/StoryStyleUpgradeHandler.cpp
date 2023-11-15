@@ -19,8 +19,16 @@ void StageCompletedHook(task* tp) {
 }
 
 void StageLoadUnloadHook(task* tp) {
-	// Only on exit game or game over.
-	if (GameState == GameStates_Exit_1 || GameState == GameStates_NormalExit || GameState == GameStates_Pause) {
+	// Only on exit game or game over. For cannon's core, also on normal stage exit.
+	if (
+		(
+			GameState == GameStates_Exit_1 &&
+			CurrentLevel >= LevelIDs_CannonsCoreS &&
+			CurrentLevel <= LevelIDs_CannonsCoreK
+		) ||
+		GameState == GameStates_NormalExit ||
+		GameState == GameStates_Pause
+	) {
 		UpgradeHandler.restoreLevelUpgrades();
 	}
 
@@ -259,17 +267,24 @@ void StoryStyleUpgradeHandler::initKnucklesUpgrades() {
 }
 
 void StoryStyleUpgradeHandler::initShadowUpgrades() {
-	if (this->disableAllShadowUpgrades) {
-		return;
-	}
-
 	std::unordered_map<Upgrades, bool> radical_highway;
 	radical_highway[Upgrades_ShadowAirShoes] = false;
 	radical_highway[Upgrades_ShadowAncientLight] = false;
 	radical_highway[Upgrades_ShadowFlameRing] = false;
 	radical_highway[Upgrades_ShadowMysticMelody] = false;
 
+	this->levelUpgrades[LevelIDs_HotShot] = radical_highway;
 	this->levelUpgrades[LevelIDs_RadicalHighway] = radical_highway;
+
+	if (this->disableAllShadowUpgrades) {
+		this->levelUpgrades[LevelIDs_WhiteJungle] = radical_highway;
+		this->levelUpgrades[LevelIDs_SonicVsShadow1] = radical_highway;
+		this->levelUpgrades[LevelIDs_SkyRail] = radical_highway;
+		this->levelUpgrades[LevelIDs_FinalChase] = radical_highway;
+		this->levelUpgrades[LevelIDs_SonicVsShadow2] = radical_highway;
+		this->levelUpgrades[LevelIDs_Biolizard] = radical_highway;
+		return;
+	}
 	
 	if (!this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_WhiteJungle] = radical_highway;
@@ -283,6 +298,9 @@ void StoryStyleUpgradeHandler::initShadowUpgrades() {
 
 	this->levelUpgrades[LevelIDs_SkyRail] = sky_rail;
 	this->levelUpgrades[LevelIDs_FinalChase] = sky_rail;
+	this->levelUpgrades[LevelIDs_SonicVsShadow1] = sky_rail;
+	this->levelUpgrades[LevelIDs_SonicVsShadow2] = sky_rail;
+	this->levelUpgrades[LevelIDs_Biolizard] = sky_rail;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_WhiteJungle] = sky_rail;
