@@ -10,7 +10,9 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 #include "SA2ModLoader/SA2ModLoader.h"
+#include "SA2ModLoader/FunctionHook.h"
 #include "StoryStyleUpgradeHandler.h"
 #include "IniFile.hpp"
+#include "main.h"
 
 #endif //PCH_H

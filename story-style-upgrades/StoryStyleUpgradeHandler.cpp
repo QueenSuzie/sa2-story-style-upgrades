@@ -1,5 +1,38 @@
 #include "pch.h"
-#include "StoryStyleUpgradeHandler.h"
+#include <chrono>
+#include <thread>
+
+FunctionHook<void, task*> hStageLoad((intptr_t)0x47BB50);
+FunctionHook<void, task*> hloadResultScreen((intptr_t)LoadResultScreenObjects);
+FunctionHook<void, task*> hGameStateHandler((intptr_t)GameStateHandler);
+
+void StageLoadHook(task* tp) {
+	hStageLoad.Original(tp);
+	int t = GameState;
+	Life_Count[0] = 1;
+	UpgradeHandler.setLevelUpgrades();
+}
+
+void StageUnloadHook(task* tp) {
+	UpgradeHandler.restoreLevelUpgrades();
+
+	hloadResultScreen.Original(tp);
+}
+
+void GameStateHandlerHook(task* tp) {
+	hGameStateHandler.Original(tp);
+
+	if (
+		GameState == GameStates_ReturnToMenu_1 ||
+		GameState == GameStates_ReturnToMenu_2 ||
+		GameState == GameStates_Exit_1 ||
+		GameState == GameStates_Exit_2 ||
+		GameState == GameStates_Exit_3 ||
+		GameState == GameStates_NormalExit
+	) {
+		UpgradeHandler.restoreLevelUpgrades();
+	}
+}
 
 void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing) {
 	this->includeCurrentLevelUpgrade = includeCurrentLevelUpgrade;
@@ -13,6 +46,10 @@ void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disabl
 	this->initShadowUpgrades();
 	this->initEggmanUpgrades();
 	this->initRougeUpgrades();
+
+	hStageLoad.Hook(StageLoadHook);
+	hloadResultScreen.Hook(StageUnloadHook);
+	hGameStateHandler.Hook(GameStateHandlerHook);
 }
 
 void StoryStyleUpgradeHandler::initCharacterUpgrades() {
@@ -364,7 +401,7 @@ void StoryStyleUpgradeHandler::setLevelUpgrades() {
 	this->originalUpgradeGots.clear();
 	for (Upgrades upgrade : this->characterUpgrades[CurrentCharacter]) {
 		this->originalUpgradeGots[upgrade] = this->hasUpgrade(upgrade);
-		upgrades = upgrades | (this->levelUpgrades[CurrentLevel][upgrade] ? upgrade : 0);
+		upgrades |= this->levelUpgrades[CurrentLevel][upgrade] ? upgrade : 0;
 		this->setUpgrade(upgrade, this->levelUpgrades[CurrentLevel][upgrade]);
 	}
 
@@ -384,7 +421,6 @@ void StoryStyleUpgradeHandler::restoreLevelUpgrades() {
 	MainCharObj2[0]->Upgrades = this->originalUpgrades;
 	this->originalUpgradeGots.clear();
 	this->originalUpgrades = -1;
-	(*ProbablySavesSaveFile)();
 }
 
 void StoryStyleUpgradeHandler::setUpgrade(Upgrades upgrade, bool enabled) {
