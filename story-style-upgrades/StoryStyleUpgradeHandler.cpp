@@ -8,7 +8,7 @@ FunctionHook<void, task*> hStageLoadUnloadHandler((intptr_t)0x43D510);
 
 void StageLoadHook(task* tp) {
 	hStageLoad.Original(tp);
-	Life_Count[0] = 1;
+
 	UpgradeHandler.setLevelUpgrades();
 }
 
