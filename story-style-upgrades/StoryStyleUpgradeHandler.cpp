@@ -4,11 +4,11 @@
 
 FunctionHook<void, task*> hStageLoad((intptr_t)0x47BB50);
 FunctionHook<void, task*> hloadResultScreen((intptr_t)LoadResultScreenObjects);
-FunctionHook<void, task*> hGameStateHandler((intptr_t)GameStateHandler);
+FunctionHook<void, task*> hStageLoadUnloadHandler((intptr_t)0x43D510);
 
 void StageLoadHook(task* tp) {
 	hStageLoad.Original(tp);
-
+	Life_Count[0] = 1;
 	UpgradeHandler.setLevelUpgrades();
 }
 
@@ -18,19 +18,13 @@ void StageUnloadHook(task* tp) {
 	hloadResultScreen.Original(tp);
 }
 
-void GameStateHandlerHook(task* tp) {
-	hGameStateHandler.Original(tp);
-
-	if (
-		GameState == GameStates_ReturnToMenu_1 ||
-		GameState == GameStates_ReturnToMenu_2 ||
-		GameState == GameStates_Exit_1 ||
-		GameState == GameStates_Exit_2 ||
-		GameState == GameStates_Exit_3 ||
-		GameState == GameStates_NormalExit
-	) {
+void StageLoadUnloadHook(task* tp) {
+	// Only on exit game or game over.
+	if (GameState == GameStates_NormalExit || GameState == GameStates_Pause) {
 		UpgradeHandler.restoreLevelUpgrades();
 	}
+
+	hStageLoadUnloadHandler.Original(tp);
 }
 
 void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing) {
@@ -48,7 +42,7 @@ void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disabl
 
 	hStageLoad.Hook(StageLoadHook);
 	hloadResultScreen.Hook(StageUnloadHook);
-	hGameStateHandler.Hook(GameStateHandlerHook);
+	hStageLoadUnloadHandler.Hook(StageLoadUnloadHook);
 }
 
 void StoryStyleUpgradeHandler::initCharacterUpgrades() {
@@ -392,7 +386,7 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 }
 
 void StoryStyleUpgradeHandler::setLevelUpgrades() {
-	if (this->levelUpgrades.count(CurrentLevel) <= 0 || MainCharObj2[0] == NULL) {
+	if (this->levelUpgrades.count(CurrentLevel) <= 0 || MainCharObj2[0] == NULL || MainCharObj2[1] != NULL) {
 		return; // Invalid Level
 	}
 
