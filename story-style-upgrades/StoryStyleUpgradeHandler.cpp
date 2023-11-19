@@ -298,11 +298,18 @@ void StoryStyleUpgradeHandler::initShadowUpgrades() {
 
 	if (this->disableAllShadowUpgrades) {
 		this->levelUpgrades[LevelIDs_WhiteJungle] = radical_highway;
-		this->levelUpgrades[LevelIDs_SonicVsShadow1] = radical_highway;
 		this->levelUpgrades[LevelIDs_SkyRail] = radical_highway;
 		this->levelUpgrades[LevelIDs_FinalChase] = radical_highway;
-		this->levelUpgrades[LevelIDs_SonicVsShadow2] = radical_highway;
 		this->levelUpgrades[LevelIDs_Biolizard] = radical_highway;
+
+		this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowAirShoes] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowAncientLight] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowFlameRing] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowMysticMelody] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowAirShoes] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowAncientLight] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowFlameRing] = false;
+		this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowMysticMelody] = false;
 		return;
 	}
 	
@@ -318,13 +325,20 @@ void StoryStyleUpgradeHandler::initShadowUpgrades() {
 
 	this->levelUpgrades[LevelIDs_SkyRail] = sky_rail;
 	this->levelUpgrades[LevelIDs_FinalChase] = sky_rail;
-	this->levelUpgrades[LevelIDs_SonicVsShadow1] = sky_rail;
-	this->levelUpgrades[LevelIDs_SonicVsShadow2] = sky_rail;
 	this->levelUpgrades[LevelIDs_Biolizard] = sky_rail;
 
 	if (this->includeCurrentLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_WhiteJungle] = sky_rail;
 	}
+	
+	this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowAirShoes] = true;
+	this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowAncientLight] = false;
+	this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowFlameRing] = false;
+	this->levelUpgrades[LevelIDs_SonicVsShadow1][Upgrades_ShadowMysticMelody] = false;
+	this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowAirShoes] = true;
+	this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowAncientLight] = false;
+	this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowFlameRing] = false;
+	this->levelUpgrades[LevelIDs_SonicVsShadow2][Upgrades_ShadowMysticMelody] = false;
 }
 
 void StoryStyleUpgradeHandler::initEggmanUpgrades() {
@@ -347,8 +361,6 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 	this->levelUpgrades[LevelIDs_WeaponsBed] = weapons_bed;
 	this->levelUpgrades[LevelIDs_CosmicWall] = weapons_bed;
 	this->levelUpgrades[LevelIDs_EggGolemE] = weapons_bed;
-	this->levelUpgrades[LevelIDs_TailsVsEggman1] = weapons_bed;
-	this->levelUpgrades[LevelIDs_TailsVsEggman2] = weapons_bed;
 	this->levelUpgrades[LevelIDs_CannonsCoreE] = weapons_bed;
 
 	if (this->includeCurrentLevelUpgrade) {
@@ -373,6 +385,17 @@ void StoryStyleUpgradeHandler::initEggmanUpgrades() {
 
 		this->levelUpgrades[LevelIDs_LostColony] = lost_colony;
 	}
+
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanJetEngine] = true;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanLargeCannon] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanLaserBlaster] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanProtectiveArmor] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman1][Upgrades_EggmanMysticMelody] = true;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanJetEngine] = true;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanLargeCannon] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanLaserBlaster] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanProtectiveArmor] = false;
+	this->levelUpgrades[LevelIDs_TailsVsEggman2][Upgrades_EggmanMysticMelody] = true;
 }
 
 void StoryStyleUpgradeHandler::initRougeUpgrades() {
