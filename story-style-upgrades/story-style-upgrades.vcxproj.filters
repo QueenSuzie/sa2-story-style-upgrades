@@ -45,5 +45,6 @@
   <ItemGroup>
     <CopyFileToFolders Include="..\configschema.xml" />
     <CopyFileToFolders Include="..\mod.ini" />
+    <CopyFileToFolders Include="..\LICENSE" />
   </ItemGroup>
 </Project>
