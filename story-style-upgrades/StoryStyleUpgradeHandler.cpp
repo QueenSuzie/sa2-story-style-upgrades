@@ -22,23 +22,23 @@
 #include <chrono>
 #include <thread>
 
-FunctionHook<void, task*> hStageLoad((intptr_t)0x47BB50);
-FunctionHook<void, task*> hloadResultScreen((intptr_t)LoadResultScreenObjects);
-FunctionHook<void, task*> hStageLoadUnloadHandler((intptr_t)0x43D510);
+FunctionHook<void> hStageLoad((intptr_t)0x47BB50);
+FunctionHook<void, char> hloadResultScreen((intptr_t)LoadResultScreenObjects);
+FunctionHook<void> hStageLoadUnloadHandler((intptr_t)0x43D510);
 
-void StageLoadHook(task* tp) {
-	hStageLoad.Original(tp);
-
+void StageLoadHook() {
+	hStageLoad.Original();
+	Life_Count[0] = 1;
 	UpgradeHandler.setLevelUpgrades();
 }
 
-void StageCompletedHook(task* tp) {
+void StageCompletedHook(char player) {
 	UpgradeHandler.restoreLevelUpgrades();
 
-	hloadResultScreen.Original(tp);
+	hloadResultScreen.Original(player);
 }
 
-void StageLoadUnloadHook(task* tp) {
+void StageLoadUnloadHook() {
 	// Only on exit game or game over. For cannon's core, also on normal stage exit.
 	if (
 		(
@@ -52,7 +52,7 @@ void StageLoadUnloadHook(task* tp) {
 		UpgradeHandler.restoreLevelUpgrades();
 	}
 
-	hStageLoadUnloadHandler.Original(tp);
+	hStageLoadUnloadHandler.Original();
 }
 
 void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing) {
