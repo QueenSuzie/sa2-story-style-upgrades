@@ -28,7 +28,7 @@ FunctionHook<void> hStageLoadUnloadHandler((intptr_t)0x43D510);
 
 void StageLoadHook() {
 	hStageLoad.Original();
-	Life_Count[0] = 1;
+
 	UpgradeHandler.setLevelUpgrades();
 }
 
