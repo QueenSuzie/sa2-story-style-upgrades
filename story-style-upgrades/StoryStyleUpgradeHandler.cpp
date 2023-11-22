@@ -19,8 +19,6 @@
  *************************************************************************************/
 
 #include "pch.h"
-#include <chrono>
-#include <thread>
 
 FunctionHook<void> hStageLoad((intptr_t)0x47BB50);
 FunctionHook<void, char> hloadResultScreen((intptr_t)LoadResultScreenObjects);
