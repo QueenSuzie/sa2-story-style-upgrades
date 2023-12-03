@@ -29,9 +29,21 @@ extern "C" {
 		bool includeCurrentLevelUpgrade = config->getBool("General", "IncludeCurrentLevelUpgrade", false);
 		bool disableAllShadowUpgrades = config->getBool("General", "DisableAllShadowUpgrades", false);
 		bool disableSonicFlameRing = config->getBool("General", "DisableSonicFlameRing", false);
+		bool enableUpgradeRestoreOnRestart = config->getBool("General", "EnableUpgradeRestoreOnRestart", false);
+		std::string upgradeResetButton = config->getString("General", "UpgradeResetButton", "Y");
 		delete config;
 
-		UpgradeHandler.init(includeCurrentLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing);
+		UpgradeHandler.init(includeCurrentLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing, enableUpgradeRestoreOnRestart, upgradeResetButton);
+	}
+
+	__declspec(dllexport) void __cdecl OnInput() {
+		if (GameState == GameStates_Pause) {
+			UpgradeHandler.setUpgradeResetButtonState();
+		}
+	}
+
+	__declspec(dllexport) void __cdecl OnExit() {
+		UpgradeHandler.restoreLevelUpgrades();
 	}
 
 	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer }; // This is needed for the Mod Loader to recognize the DLL.

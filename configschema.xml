@@ -11,6 +11,20 @@
 			<Property name="DisableSonicFlameRing" type="bool" defaultvalue="False" display="Disable Sonic Flame Ring" alwaysinclude="true">
 				<HelpText>When enabled Sonic will never have the flame ring upgrade in any stage.</HelpText>
 			</Property>
+			<Property name="EnableUpgradeRestoreOnRestart" type="bool" defaultvalue="False" display="Enable Upgrade Restore on Restart" alwaysinclude="true">
+				<HelpText>When enabled your upgrades will be restored to the initial stage's state if you are holding the reset button while restarting. For example, on Mission Street you will lose the hover upgrade. Note: It is important to be holding the reset button BEFORE pressing yes on the restart confirmation dialog. Note: If the "IncludeCurrentLevelUpgrade" option is true, this will do nothing.</HelpText>
+			</Property>
+			<Property name="UpgradeResetButton" type="Buttons" defaultvalue="Y" display="Upgrade Reset Button" alwaysinclude="true">
+				<HelpText>The button you need to be holding while restarting for the upgrades to be reset. Does nothing if "EnableUpgradeRestoreOnRestart" is false.</HelpText>
+			</Property>
 		</Group>
 	</Groups>
+	<Enums>
+		<Enum name="Buttons">
+			<EnumMember name="Y" />
+			<EnumMember name="Z" />
+			<EnumMember name="Left Trigger" />
+			<EnumMember name="Right Trigger" />
+		</Enum>
+	</Enums>
 </ConfigSchema>

@@ -50,13 +50,17 @@ void StageLoadUnloadHook() {
 		UpgradeHandler.restoreLevelUpgrades();
 	}
 
+	UpgradeHandler.checkRestartUpgradeReset();
+
 	hStageLoadUnloadHandler.Original();
 }
 
-void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing) {
+void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton) {
 	this->includeCurrentLevelUpgrade = includeCurrentLevelUpgrade;
 	this->disableAllShadowUpgrades = disableAllShadowUpgrades;
 	this->disableSonicFlameRing = disableSonicFlameRing;
+	this->enableUpgradeRestoreOnRestart = enableUpgradeRestoreOnRestart;
+	this->setUpgradeResetButton(upgradeResetButton);
 
 	this->initCharacterUpgrades();
 	this->initSonicUpgrades();
@@ -439,6 +443,20 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 	this->levelUpgrades[LevelIDs_CannonsCoreR] = mad_space;
 }
 
+void StoryStyleUpgradeHandler::setUpgradeResetButton(std::string upgradeResetButton) {
+	if (upgradeResetButton == "Y") {
+		return; // Default, do nothing.
+	}
+
+	if (upgradeResetButton == "Z") {
+		this->upgradeResetButton = Buttons_Z;
+	} else if (upgradeResetButton == "Left Trigger") {
+		this->upgradeResetButton = Buttons_L;
+	} else if (upgradeResetButton == "Right Trigger") {
+		this->upgradeResetButton = Buttons_R;
+	}
+}
+
 void StoryStyleUpgradeHandler::setLevelUpgrades() {
 	if (this->levelUpgrades.count(CurrentLevel) <= 0 || MainCharObj2[0] == NULL || MainCharObj2[1] != NULL) {
 		return; // Invalid Level
@@ -537,4 +555,18 @@ bool StoryStyleUpgradeHandler::hasUpgrade(Upgrades upgrade) {
 	}
 
 	return (MainCharObj2[0]->Upgrades & upgrade) == upgrade;
+}
+
+void StoryStyleUpgradeHandler::setUpgradeResetButtonState() {
+	this->isUpgradeResetButtonHeld = Controllers[0].on & this->upgradeResetButton;
+}
+
+void StoryStyleUpgradeHandler::checkRestartUpgradeReset() {
+	if (!this->isUpgradeResetButtonHeld || !this->enableUpgradeRestoreOnRestart) {
+		return;
+	}
+
+	this->isUpgradeResetButtonHeld = false;
+	UpgradeHandler.restoreLevelUpgrades();
+	UpgradeHandler.setLevelUpgrades();
 }
