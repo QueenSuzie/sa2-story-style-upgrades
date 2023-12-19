@@ -20,14 +20,14 @@
 
 #include "pch.h"
 
-FunctionHook<void> hStageLoad((intptr_t)0x47BB50);
+FunctionHook<int> hLoadCharacters((intptr_t)LoadCharacters);
 FunctionHook<void, char> hloadResultScreen((intptr_t)LoadResultScreenObjects);
 FunctionHook<void> hStageLoadUnloadHandler((intptr_t)0x43D510);
 
-void StageLoadHook() {
-	hStageLoad.Original();
-
+int LoadCharacters_h() {
+	int ret = hLoadCharacters.Original();
 	UpgradeHandler.setLevelUpgrades();
+	return ret;
 }
 
 void StageCompletedHook(char player) {
@@ -70,7 +70,7 @@ void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disabl
 	this->initEggmanUpgrades();
 	this->initRougeUpgrades();
 
-	hStageLoad.Hook(StageLoadHook);
+	hLoadCharacters.Hook(LoadCharacters_h);
 	hloadResultScreen.Hook(StageCompletedHook);
 	hStageLoadUnloadHandler.Hook(StageLoadUnloadHook);
 }
