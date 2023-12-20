@@ -27,13 +27,14 @@ extern "C" {
 		int t = GameState;
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		bool includeCurrentLevelUpgrade = config->getBool("General", "IncludeCurrentLevelUpgrade", false);
+		bool includeCurrentHuntingLevelUpgrade = config->getBool("General", "IncludeCurrentHuntingLevelUpgrade", false);
 		bool disableAllShadowUpgrades = config->getBool("General", "DisableAllShadowUpgrades", false);
 		bool disableSonicFlameRing = config->getBool("General", "DisableSonicFlameRing", false);
 		bool enableUpgradeRestoreOnRestart = config->getBool("General", "EnableUpgradeRestoreOnRestart", false);
 		std::string upgradeResetButton = config->getString("General", "UpgradeResetButton", "Y");
 		delete config;
 
-		UpgradeHandler.init(includeCurrentLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing, enableUpgradeRestoreOnRestart, upgradeResetButton);
+		UpgradeHandler.init(includeCurrentLevelUpgrade, includeCurrentHuntingLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing, enableUpgradeRestoreOnRestart, upgradeResetButton);
 	}
 
 	__declspec(dllexport) void __cdecl OnInput() {

@@ -27,6 +27,7 @@ class StoryStyleUpgradeHandler {
 		std::unordered_map<int, std::vector<Upgrades>> characterUpgrades;
 		std::unordered_map<Upgrades, bool> originalUpgradeGots;
 		bool includeCurrentLevelUpgrade = false;
+		bool includeCurrentHuntingLevelUpgrade = true;
 		bool disableAllShadowUpgrades = false;
 		bool disableSonicFlameRing = false;
 		bool enableUpgradeRestoreOnRestart = true;
@@ -45,7 +46,7 @@ class StoryStyleUpgradeHandler {
 		void setUpgrade(Upgrades, bool);
 
 	public:
-		void init(bool, bool, bool, bool, std::string);
+		void init(bool, bool, bool, bool, bool, std::string);
 		void setLevelUpgrades();
 		void restoreLevelUpgrades();
 		bool hasUpgrade(Upgrades);

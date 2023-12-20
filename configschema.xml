@@ -5,6 +5,9 @@
 			<Property name="IncludeCurrentLevelUpgrade" type="bool" defaultvalue="False" display="Include Current Level Upgrade" alwaysinclude="true">
 				<HelpText>When enabled you will not have to obtain the upgrade contained in this stage. For example at the start of Metal Harbor you will normally have no upgrades and need to get lightdash. With this enabled you will have light dash from the start at Metal Harbor.</HelpText>
 			</Property>
+			<Property name="IncludeCurrentHuntingLevelUpgrade" type="bool" defaultvalue="True" display="Include Current Hunting Level Upgrade" alwaysinclude="true">
+				<HelpText>When enabled you will not have to obtain the upgrade contained in this hunting stage. This is basically the same as the previous setting but ONLY for hunting. This is useful if you have the previous setting turned off but want it on for hunting characters. If the previous setting is turned on then this does nothing.</HelpText>
+			</Property>
 			<Property name="DisableAllShadowUpgrades" type="bool" defaultvalue="False" display="Disable All Shadow Upgrades" alwaysinclude="true">
 				<HelpText>When enabled Shadow will never have any upgrades in any stage.</HelpText>
 			</Property>

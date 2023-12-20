@@ -55,8 +55,9 @@ void StageLoadUnloadHook() {
 	hStageLoadUnloadHandler.Original();
 }
 
-void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton) {
+void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton) {
 	this->includeCurrentLevelUpgrade = includeCurrentLevelUpgrade;
+	this->includeCurrentHuntingLevelUpgrade = includeCurrentHuntingLevelUpgrade;
 	this->disableAllShadowUpgrades = disableAllShadowUpgrades;
 	this->disableSonicFlameRing = disableSonicFlameRing;
 	this->enableUpgradeRestoreOnRestart = enableUpgradeRestoreOnRestart;
@@ -250,7 +251,7 @@ void StoryStyleUpgradeHandler::initKnucklesUpgrades() {
 
 	this->levelUpgrades[LevelIDs_WildCanyon] = wild_canyon;
 
-	if (!this->includeCurrentLevelUpgrade) {
+	if (!this->includeCurrentLevelUpgrade && !this->includeCurrentHuntingLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_PumpkinHill] = wild_canyon;
 	}
 
@@ -263,11 +264,11 @@ void StoryStyleUpgradeHandler::initKnucklesUpgrades() {
 
 	this->levelUpgrades[LevelIDs_AquaticMine] = aquatic_mine;
 
-	if (!this->includeCurrentLevelUpgrade) {
+	if (!this->includeCurrentLevelUpgrade && !this->includeCurrentHuntingLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_DeathChamber] = aquatic_mine;
 	}
 
-	if (this->includeCurrentLevelUpgrade) {
+	if (this->includeCurrentLevelUpgrade || this->includeCurrentHuntingLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_PumpkinHill] = aquatic_mine;
 	}
 
@@ -283,7 +284,7 @@ void StoryStyleUpgradeHandler::initKnucklesUpgrades() {
 	this->levelUpgrades[LevelIDs_KnucklesVsRouge] = meteor_herd;
 	this->levelUpgrades[LevelIDs_CannonsCoreK] = meteor_herd;
 
-	if (this->includeCurrentLevelUpgrade) {
+	if (this->includeCurrentLevelUpgrade || this->includeCurrentHuntingLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_DeathChamber] = meteor_herd;
 	}
 }
@@ -409,7 +410,7 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 
 	this->levelUpgrades[LevelIDs_DryLagoon] = dry_lagoon;
 
-	if (!this->includeCurrentLevelUpgrade) {
+	if (!this->includeCurrentLevelUpgrade && !this->includeCurrentHuntingLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_EggQuarters] = dry_lagoon;
 	}
 
@@ -433,7 +434,7 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 	mad_space[Upgrades_RougeIronBoots] = true;
 	mad_space[Upgrades_RougeMysticMelody] = false;
 
-	if (this->includeCurrentLevelUpgrade) {
+	if (this->includeCurrentLevelUpgrade || this->includeCurrentHuntingLevelUpgrade) {
 		this->levelUpgrades[LevelIDs_EggQuarters] = security_hall;
 		this->levelUpgrades[LevelIDs_MadSpace] = mad_space;
 	} else {
