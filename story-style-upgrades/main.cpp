@@ -24,7 +24,6 @@ StoryStyleUpgradeHandler UpgradeHandler;
 
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions) {
-		int t = GameState;
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		bool includeCurrentLevelUpgrade = config->getBool("General", "IncludeCurrentLevelUpgrade", false);
 		bool includeCurrentHuntingLevelUpgrade = config->getBool("General", "IncludeCurrentHuntingLevelUpgrade", false);
