@@ -20,40 +20,8 @@
 
 #include "pch.h"
 
-FunctionHook<int> hLoadCharacters((intptr_t)LoadCharacters);
-FunctionHook<void, char> hloadResultScreen((intptr_t)LoadResultScreenObjects);
-FunctionHook<void> hStageLoadUnloadHandler((intptr_t)0x43D510);
-
-int LoadCharacters_h() {
-	int ret = hLoadCharacters.Original();
-	UpgradeHandler.setLevelUpgrades();
-	return ret;
-}
-
-void StageCompletedHook(char player) {
-	UpgradeHandler.restoreLevelUpgrades();
-
-	hloadResultScreen.Original(player);
-}
-
-void StageLoadUnloadHook() {
-	// Only on exit game or game over. For cannon's core, also on normal stage exit.
-	if (
-		(
-			GameState == GameStates_Exit_1 &&
-			CurrentLevel >= LevelIDs_CannonsCoreS &&
-			CurrentLevel <= LevelIDs_CannonsCoreK
-		) ||
-		GameState == GameStates_NormalExit ||
-		GameState == GameStates_Pause
-	) {
-		UpgradeHandler.restoreLevelUpgrades();
-	}
-
-	UpgradeHandler.checkRestartUpgradeReset();
-
-	hStageLoadUnloadHandler.Original();
-}
+FunctionHook<int, int> hUpgradeGet((intptr_t)LevelItem_Main);
+FunctionHook<void> hRestartLevel((intptr_t)0x43C370);
 
 void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton) {
 	this->includeCurrentLevelUpgrade = includeCurrentLevelUpgrade;
@@ -63,6 +31,7 @@ void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool includ
 	this->enableUpgradeRestoreOnRestart = enableUpgradeRestoreOnRestart;
 	this->setUpgradeResetButton(upgradeResetButton);
 
+	this->initUpgradeBitsToIndexes();
 	this->initCharacterUpgrades();
 	this->initSonicUpgrades();
 	this->initTailsUpgrades();
@@ -71,9 +40,46 @@ void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool includ
 	this->initEggmanUpgrades();
 	this->initRougeUpgrades();
 
-	hLoadCharacters.Hook(LoadCharacters_h);
-	hloadResultScreen.Hook(StageCompletedHook);
-	hStageLoadUnloadHandler.Hook(StageLoadUnloadHook);
+	this->overwriteUpgradeItemComparison();
+
+	hUpgradeGet.Hook(UpgradeHook);
+	SetPhysicsAndGiveUpgrades.Hook(SetCharacterPhysicsAndUpgrades);
+	hRestartLevel.Hook(RestartLevel);
+}
+
+void StoryStyleUpgradeHandler::initUpgradeBitsToIndexes() {
+	if (!this->upgradesBitToIndexMap.empty()) {
+		return;
+	}
+
+	this->upgradesBitToIndexMap[Upgrades_SonicLightShoes] = UpgradeBits_SonicLightShoes;
+	this->upgradesBitToIndexMap[Upgrades_SonicAncientLight] = UpgradeBits_SonicAncientLight;
+	this->upgradesBitToIndexMap[Upgrades_SonicMagicGloves] = UpgradeBits_SonicMagicGloves;
+	this->upgradesBitToIndexMap[Upgrades_SonicFlameRing] = UpgradeBits_SonicFlameRing;
+	this->upgradesBitToIndexMap[Upgrades_SonicBounceBracelet] = UpgradeBits_SonicBounceBracelet;
+	this->upgradesBitToIndexMap[Upgrades_SonicMysticMelody] = UpgradeBits_SonicMysticMelody;
+	this->upgradesBitToIndexMap[Upgrades_TailsBooster] = UpgradeBits_TailsBooster;
+	this->upgradesBitToIndexMap[Upgrades_TailsBazooka] = UpgradeBits_TailsBazooka;
+	this->upgradesBitToIndexMap[Upgrades_TailsLaserBlaster] = UpgradeBits_TailsLaserBlaster;
+	this->upgradesBitToIndexMap[Upgrades_TailsMysticMelody] = UpgradeBits_TailsMysticMelody;
+	this->upgradesBitToIndexMap[Upgrades_KnucklesShovelClaw] = UpgradeBits_KnucklesShovelClaw;
+	this->upgradesBitToIndexMap[Upgrades_KnucklesSunglasses] = UpgradeBits_KnucklesSunglasses;
+	this->upgradesBitToIndexMap[Upgrades_KnucklesHammerGloves] = UpgradeBits_KnucklesHammerGloves;
+	this->upgradesBitToIndexMap[Upgrades_KnucklesAirNecklace] = UpgradeBits_KnucklesAirNecklace;
+	this->upgradesBitToIndexMap[Upgrades_KnucklesMysticMelody] = UpgradeBits_KnucklesMysticMelody;
+	this->upgradesBitToIndexMap[Upgrades_ShadowAirShoes] = UpgradeBits_ShadowAirShoes;
+	this->upgradesBitToIndexMap[Upgrades_ShadowAncientLight] = UpgradeBits_ShadowAncientLight;
+	this->upgradesBitToIndexMap[Upgrades_ShadowFlameRing] = UpgradeBits_ShadowFlameRing;
+	this->upgradesBitToIndexMap[Upgrades_ShadowMysticMelody] = UpgradeBits_ShadowMysticMelody;
+	this->upgradesBitToIndexMap[Upgrades_EggmanJetEngine] = UpgradeBits_EggmanJetEngine;
+	this->upgradesBitToIndexMap[Upgrades_EggmanLargeCannon] = UpgradeBits_EggmanLargeCannon;
+	this->upgradesBitToIndexMap[Upgrades_EggmanLaserBlaster] = UpgradeBits_EggmanLaserBlaster;
+	this->upgradesBitToIndexMap[Upgrades_EggmanProtectiveArmor] = UpgradeBits_EggmanProtectiveArmor;
+	this->upgradesBitToIndexMap[Upgrades_EggmanMysticMelody] = UpgradeBits_EggmanMysticMelody;
+	this->upgradesBitToIndexMap[Upgrades_RougePickNails] = UpgradeBits_RougePickNails;
+	this->upgradesBitToIndexMap[Upgrades_RougeTreasureScope] = UpgradeBits_RougeTreasureScope;
+	this->upgradesBitToIndexMap[Upgrades_RougeIronBoots] = UpgradeBits_RougeIronBoots;
+	this->upgradesBitToIndexMap[Upgrades_RougeMysticMelody] = UpgradeBits_RougeMysticMelody;
 }
 
 void StoryStyleUpgradeHandler::initCharacterUpgrades() {
@@ -464,98 +470,20 @@ void StoryStyleUpgradeHandler::setLevelUpgrades() {
 	}
 
 	int upgrades = 0;
-	this->originalUpgradeGots.clear();
 	for (Upgrades upgrade : this->characterUpgrades[CurrentCharacter]) {
-		this->originalUpgradeGots[upgrade] = this->hasUpgrade(upgrade);
 		upgrades |= this->levelUpgrades[CurrentLevel][upgrade] ? upgrade : 0;
-		this->setUpgrade(upgrade, this->levelUpgrades[CurrentLevel][upgrade]);
+		StoryStyleUpgradeHandler::CharacterUpgradesGot[this->upgradesBitToIndexMap[upgrade]] = this->levelUpgrades[CurrentLevel][upgrade];
 	}
 
-	this->originalUpgrades = MainCharObj2[0]->Upgrades;
+	this->originalUpgrades = upgrades;
 	MainCharObj2[0]->Upgrades = upgrades;
 }
 
 void StoryStyleUpgradeHandler::restoreLevelUpgrades() {
-	if (this->levelUpgrades.count(CurrentLevel) <= 0 || this->originalUpgradeGots.size() <= 0 || this->originalUpgrades < 0) {
-		return;
-	}
-
-	for (Upgrades upgrade : this->characterUpgrades[CurrentCharacter]) {
-		this->setUpgrade(upgrade, this->originalUpgradeGots[upgrade]);
-	}
-	
 	MainCharObj2[0]->Upgrades = this->originalUpgrades;
-	this->originalUpgradeGots.clear();
-	this->originalUpgrades = -1;
-}
-
-void StoryStyleUpgradeHandler::setUpgrade(Upgrades upgrade, bool enabled) {
-	switch (upgrade) {
-		case Upgrades_SonicLightShoes:
-			SonicLightShoesGot = enabled;
-		case Upgrades_SonicAncientLight:
-			SonicAncientLightGot = enabled;
-		case Upgrades_SonicMagicGloves:
-			SonicMagicGlovesGot = enabled;
-		case Upgrades_SonicFlameRing:
-			SonicFlameRingGot = enabled;
-		case Upgrades_SonicBounceBracelet:
-			SonicBounceBraceletGot = enabled;
-		case Upgrades_SonicMysticMelody:
-			SonicMysticMelodyGot = enabled;
-		case Upgrades_TailsBooster:
-			TailsBoosterGot = enabled;
-		case Upgrades_TailsBazooka:
-			TailsBazookaGot = enabled;
-		case Upgrades_TailsLaserBlaster:
-			TailsLaserBlasterGot = enabled;
-		case Upgrades_TailsMysticMelody:
-			TailsMysticMelodyGot = enabled;
-		case Upgrades_KnucklesShovelClaw:
-			KnucklesShovelClawGot = enabled;
-		case Upgrades_KnucklesSunglasses:
-			KnucklesSunglassesGot = enabled;
-		case Upgrades_KnucklesHammerGloves:
-			KnucklesHammerGlovesGot = enabled;
-		case Upgrades_KnucklesAirNecklace:
-			KnucklesAirNecklaceGot = enabled;
-		case Upgrades_KnucklesMysticMelody:
-			KnucklesMysticMelodyGot = enabled;
-		case Upgrades_ShadowAirShoes:
-			ShadowAirShoesGot = enabled;
-		case Upgrades_ShadowAncientLight:
-			ShadowAncientLightGot = enabled;
-		case Upgrades_ShadowFlameRing:
-			ShadowFlameRingGot = enabled;
-		case Upgrades_ShadowMysticMelody:
-			ShadowMysticMelodyGot = enabled;
-		case Upgrades_EggmanJetEngine:
-			EggmanJetEngineGot = enabled;
-		case Upgrades_EggmanLargeCannon:
-			EggmanLargeCannonGot = enabled;
-		case Upgrades_EggmanLaserBlaster:
-			EggmanLaserBlasterGot = enabled;
-		case Upgrades_EggmanProtectiveArmor:
-			EggmanProtectiveArmorGot = enabled;
-		case Upgrades_EggmanMysticMelody:
-			EggmanMysticMelodyGot = enabled;
-		case Upgrades_RougePickNails:
-			RougePickNailsGot = enabled;
-		case Upgrades_RougeTreasureScope:
-			RougeTreasureScopeGot = enabled;
-		case Upgrades_RougeIronBoots:
-			RougeIronBootsGot = enabled;
-		case Upgrades_RougeMysticMelody:
-			RougeMysticMelodyGot = enabled;
+	for (Upgrades upgrade : this->characterUpgrades[CurrentCharacter]) {
+		StoryStyleUpgradeHandler::CharacterUpgradesGot[this->upgradesBitToIndexMap[upgrade]] = this->levelUpgrades[CurrentLevel][upgrade];
 	}
-}
-
-bool StoryStyleUpgradeHandler::hasUpgrade(Upgrades upgrade) {
-	if (MainCharObj2[0] == NULL) {
-		return false;
-	}
-
-	return (MainCharObj2[0]->Upgrades & upgrade) == upgrade;
 }
 
 void StoryStyleUpgradeHandler::setUpgradeResetButtonState() {
@@ -567,7 +495,57 @@ void StoryStyleUpgradeHandler::checkRestartUpgradeReset() {
 		return;
 	}
 
-	this->isUpgradeResetButtonHeld = false;
 	UpgradeHandler.restoreLevelUpgrades();
+}
+
+void StoryStyleUpgradeHandler::overwriteUpgradeItemComparison() {
+	WriteJump((void*)0x6D8649, &StoryStyleUpgradeHandler::UpgradeItemComparison);
+	for (unsigned short i = 0; i < 5; i++) {
+		WriteData<1>((void*)(0x6D864E + i), 0x90u);
+	}
+}
+
+bool StoryStyleUpgradeHandler::CharacterHasUpgrade(unsigned int upgrade) {
+	if (upgrade >= StoryStyleUpgradeHandler::CharacterUpgradesGotSize) {
+		return false;
+	}
+
+	return StoryStyleUpgradeHandler::CharacterUpgradesGot[upgrade];
+}
+
+__declspec(naked) void StoryStyleUpgradeHandler::UpgradeItemComparison() {
+	__asm {
+		push	eax
+		call	StoryStyleUpgradeHandler::CharacterHasUpgrade
+		cmp		eax, 0
+		pop		eax
+		pop		edi
+		jz		UPGRADE_RETURN
+		jmp		StoryStyleUpgradeHandler::JumpBackToLevelItemLoad
+
+UPGRADE_RETURN:
+		jmp		StoryStyleUpgradeHandler::JumpBackToLevelItemUpgradeLoad
+	}
+}
+
+int UpgradeHook(int upgrade) {
+	int upgrades = MainCharObj2[0]->Upgrades;
+	int ret = hUpgradeGet.Original(upgrade);
+
+	if (upgrades != MainCharObj2[0]->Upgrades) {
+		int upgrade_got = MainCharObj2[0]->Upgrades - upgrades;
+		StoryStyleUpgradeHandler::CharacterUpgradesGot[UpgradeHandler.upgradesBitToIndexMap[upgrade_got]] = true;
+	}
+
+	return ret;
+}
+
+void SetCharacterPhysicsAndUpgrades(ObjectMaster* character, int a2) {
+	SetPhysicsAndGiveUpgrades.Original(character, a2);
 	UpgradeHandler.setLevelUpgrades();
+}
+
+void RestartLevel() {
+	hRestartLevel.Original();
+	UpgradeHandler.checkRestartUpgradeReset();
 }

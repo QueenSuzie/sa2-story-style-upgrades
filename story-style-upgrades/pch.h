@@ -11,6 +11,7 @@
 #include "framework.h"
 #include "SA2ModLoader.h"
 #include "FunctionHook.h"
+#include "UsercallFunctionHandler.h"
 #include "StoryStyleUpgradeHandler.h"
 #include "IniFile.hpp"
 #include "main.h"
