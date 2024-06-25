@@ -21,11 +21,12 @@
 #pragma once
 #include <unordered_map>
 
+UsercallFuncVoid(SetPhysicsAndGiveUpgrades, (ObjectMaster* character, int a2), (character, a2), (intptr_t)0x4599C0, rEAX, rECX);
+
 class StoryStyleUpgradeHandler {
 	private:
 		std::unordered_map<short, std::unordered_map<Upgrades, bool>> levelUpgrades;
 		std::unordered_map<int, std::vector<Upgrades>> characterUpgrades;
-		std::unordered_map<Upgrades, bool> originalUpgradeGots;
 		bool includeCurrentLevelUpgrade = false;
 		bool includeCurrentHuntingLevelUpgrade = true;
 		bool disableAllShadowUpgrades = false;
@@ -35,6 +36,7 @@ class StoryStyleUpgradeHandler {
 		int upgradeResetButton = Buttons_Y;
 		int originalUpgrades = -1;
 
+		void initUpgradeBitsToIndexes();
 		void initCharacterUpgrades();
 		void initSonicUpgrades();
 		void initTailsUpgrades();
@@ -43,14 +45,23 @@ class StoryStyleUpgradeHandler {
 		void initEggmanUpgrades();
 		void initRougeUpgrades();
 		void setUpgradeResetButton(std::string);
-		void setUpgrade(Upgrades, bool);
+		void overwriteUpgradeItemComparison();
 
 	public:
 		void init(bool, bool, bool, bool, bool, std::string);
 		void setLevelUpgrades();
 		void restoreLevelUpgrades();
-		bool hasUpgrade(Upgrades);
 		void setUpgradeResetButtonState();
 		void checkRestartUpgradeReset();
+		static void UpgradeItemComparison();
+		static bool CharacterHasUpgrade(unsigned int);
+		inline static bool CharacterUpgradesGot[28] = {};
+		inline static unsigned short CharacterUpgradesGotSize = 28;
+		std::unordered_map<unsigned int, unsigned short> upgradesBitToIndexMap;
+		static inline const void* JumpBackToLevelItemLoad = (void*)0x6D8653;
+		static inline const void* JumpBackToLevelItemUpgradeLoad = (void*)0x6D865F;
 };
 
+int UpgradeHook(int);
+void SetCharacterPhysicsAndUpgrades(ObjectMaster*, int);
+void RestartLevel();

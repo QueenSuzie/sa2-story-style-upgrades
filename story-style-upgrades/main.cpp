@@ -42,9 +42,5 @@ extern "C" {
 		}
 	}
 
-	__declspec(dllexport) void __cdecl OnExit() {
-		UpgradeHandler.restoreLevelUpgrades();
-	}
-
 	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer }; // This is needed for the Mod Loader to recognize the DLL.
 }
