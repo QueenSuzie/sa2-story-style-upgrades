@@ -464,6 +464,49 @@ void StoryStyleUpgradeHandler::setUpgradeResetButton(std::string upgradeResetBut
 	}
 }
 
+int StoryStyleUpgradeHandler::handleCCOUpgrades(Upgrades upgrade) {
+	if (
+		!StoryStyleUpgradeHandler::CCODetected
+		|| (CurrentCharacter != Characters_Sonic && CurrentCharacter != Characters_Knuckles)
+		|| !this->levelUpgrades[CurrentLevel][upgrade]
+	) {
+		return 0;
+	}
+
+	switch (upgrade) {
+		case Upgrades_SonicLightShoes:
+			return Upgrades_ShadowAirShoes;
+
+		case Upgrades_SonicAncientLight:
+			return Upgrades_ShadowAncientLight;
+
+		case Upgrades_SonicFlameRing:
+			return Upgrades_ShadowFlameRing;
+
+		case Upgrades_SonicMysticMelody:
+			return Upgrades_ShadowMysticMelody;
+
+		case Upgrades_KnucklesShovelClaw:
+			return Upgrades_RougePickNails;
+
+		case Upgrades_KnucklesSunglasses:
+			return Upgrades_RougeTreasureScope;
+
+		case Upgrades_KnucklesHammerGloves:
+			return Upgrades_RougeIronBoots;
+
+		case Upgrades_KnucklesMysticMelody:
+			return Upgrades_RougeMysticMelody;
+
+		case Upgrades_SonicMagicGloves:
+		case Upgrades_SonicBounceBracelet:
+		case Upgrades_KnucklesAirNecklace:
+			return upgrade;
+	}
+
+	return 0;
+}
+
 void StoryStyleUpgradeHandler::setLevelUpgrades() {
 	if (this->levelUpgrades.count(CurrentLevel) <= 0 || MainCharObj2[0] == NULL || MainCharObj2[1] != NULL) {
 		return; // Invalid Level
@@ -472,6 +515,7 @@ void StoryStyleUpgradeHandler::setLevelUpgrades() {
 	int upgrades = 0;
 	for (Upgrades upgrade : this->characterUpgrades[CurrentCharacter]) {
 		upgrades |= this->levelUpgrades[CurrentLevel][upgrade] ? upgrade : 0;
+		upgrades |= this->handleCCOUpgrades(upgrade);
 		StoryStyleUpgradeHandler::CharacterUpgradesGot[this->upgradesBitToIndexMap[upgrade]] = this->levelUpgrades[CurrentLevel][upgrade];
 	}
 

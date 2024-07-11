@@ -33,6 +33,10 @@ extern "C" {
 		std::string upgradeResetButton = config->getString("General", "UpgradeResetButton", "Y");
 		delete config;
 
+		if (helperFunctions.Mods->find("sa2.queensuzie.coolcharactersonly") != NULL) {
+			StoryStyleUpgradeHandler::CCODetected = true;
+		}
+
 		UpgradeHandler.init(includeCurrentLevelUpgrade, includeCurrentHuntingLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing, enableUpgradeRestoreOnRestart, upgradeResetButton);
 	}
 

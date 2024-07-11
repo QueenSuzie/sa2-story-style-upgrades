@@ -44,17 +44,19 @@ class StoryStyleUpgradeHandler {
 		void initShadowUpgrades();
 		void initEggmanUpgrades();
 		void initRougeUpgrades();
-		void setUpgradeResetButton(std::string);
+		int handleCCOUpgrades(Upgrades upgrade);
+		void setUpgradeResetButton(std::string upgradeResetButton);
 		void overwriteUpgradeItemComparison();
 
 	public:
-		void init(bool, bool, bool, bool, bool, std::string);
+		void init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton);
 		void setLevelUpgrades();
 		void restoreLevelUpgrades();
 		void setUpgradeResetButtonState();
 		void checkRestartUpgradeReset();
 		static void UpgradeItemComparison();
-		static bool CharacterHasUpgrade(unsigned int);
+		static bool CharacterHasUpgrade(unsigned int upgrade);
+		inline static bool CCODetected = false;
 		inline static bool CharacterUpgradesGot[28] = {};
 		inline static unsigned short CharacterUpgradesGotSize = 28;
 		std::unordered_map<unsigned int, unsigned short> upgradesBitToIndexMap;
@@ -62,6 +64,6 @@ class StoryStyleUpgradeHandler {
 		static inline const void* JumpBackToLevelItemUpgradeLoad = (void*)0x6D865F;
 };
 
-int UpgradeHook(int);
-void SetCharacterPhysicsAndUpgrades(ObjectMaster*, int);
+int UpgradeHook(int upgrade);
+void SetCharacterPhysicsAndUpgrades(ObjectMaster* character, int a2);
 void RestartLevel();
