@@ -464,11 +464,11 @@ void StoryStyleUpgradeHandler::setUpgradeResetButton(std::string upgradeResetBut
 	}
 }
 
-int StoryStyleUpgradeHandler::handleCCOUpgrades(Upgrades upgrade) {
+int StoryStyleUpgradeHandler::handleCCOUpgrades(Upgrades upgrade, bool ignore_level_upgrades = false) {
 	if (
 		!StoryStyleUpgradeHandler::CCODetected
 		|| (CurrentCharacter != Characters_Sonic && CurrentCharacter != Characters_Knuckles)
-		|| !this->levelUpgrades[CurrentLevel][upgrade]
+		|| (!this->levelUpgrades[CurrentLevel][upgrade] && !ignore_level_upgrades)
 	) {
 		return 0;
 	}
@@ -579,6 +579,7 @@ int UpgradeHook(int upgrade) {
 	if (upgrades != MainCharObj2[0]->Upgrades) {
 		int upgrade_got = MainCharObj2[0]->Upgrades - upgrades;
 		StoryStyleUpgradeHandler::CharacterUpgradesGot[UpgradeHandler.upgradesBitToIndexMap[upgrade_got]] = true;
+		MainCharObj2[0]->Upgrades |= UpgradeHandler.handleCCOUpgrades((Upgrades)upgrade_got, true);
 	}
 
 	return ret;

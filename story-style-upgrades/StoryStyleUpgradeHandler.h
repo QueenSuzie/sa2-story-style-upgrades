@@ -44,7 +44,6 @@ class StoryStyleUpgradeHandler {
 		void initShadowUpgrades();
 		void initEggmanUpgrades();
 		void initRougeUpgrades();
-		int handleCCOUpgrades(Upgrades upgrade);
 		void setUpgradeResetButton(std::string upgradeResetButton);
 		void overwriteUpgradeItemComparison();
 
@@ -54,6 +53,7 @@ class StoryStyleUpgradeHandler {
 		void restoreLevelUpgrades();
 		void setUpgradeResetButtonState();
 		void checkRestartUpgradeReset();
+		int handleCCOUpgrades(Upgrades upgrade, bool ignore_level_upgrades);
 		static void UpgradeItemComparison();
 		static bool CharacterHasUpgrade(unsigned int upgrade);
 		inline static bool CCODetected = false;
