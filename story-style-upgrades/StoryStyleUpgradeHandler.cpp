@@ -448,6 +448,20 @@ void StoryStyleUpgradeHandler::initRougeUpgrades() {
 	}
 
 	this->levelUpgrades[LevelIDs_CannonsCoreR] = mad_space;
+
+	if (StoryStyleUpgradeHandler::CCODetected) {
+		this->levelUpgrades[LevelIDs_WildCanyon].insert(dry_lagoon.begin(), dry_lagoon.end());
+		this->levelUpgrades[LevelIDs_AquaticMine].insert(security_hall.begin(), security_hall.end());
+		this->levelUpgrades[LevelIDs_MeteorHerd].insert(mad_space.begin(), mad_space.end());
+
+		if (!this->includeCurrentLevelUpgrade && !this->includeCurrentHuntingLevelUpgrade) {
+			this->levelUpgrades[LevelIDs_PumpkinHill].insert(dry_lagoon.begin(), dry_lagoon.end());
+			this->levelUpgrades[LevelIDs_DeathChamber].insert(security_hall.begin(), security_hall.end());
+		} else {
+			this->levelUpgrades[LevelIDs_PumpkinHill].insert(security_hall.begin(), security_hall.end());
+			this->levelUpgrades[LevelIDs_DeathChamber].insert(mad_space.begin(), mad_space.end());
+		}
+	}
 }
 
 void StoryStyleUpgradeHandler::setUpgradeResetButton(std::string upgradeResetButton) {
@@ -467,7 +481,7 @@ void StoryStyleUpgradeHandler::setUpgradeResetButton(std::string upgradeResetBut
 int StoryStyleUpgradeHandler::handleCCOUpgrades(Upgrades upgrade, bool ignore_level_upgrades = false) {
 	if (
 		!StoryStyleUpgradeHandler::CCODetected
-		|| (CurrentCharacter != Characters_Sonic && CurrentCharacter != Characters_Knuckles)
+		|| CurrentCharacter != Characters_Sonic
 		|| (!this->levelUpgrades[CurrentLevel][upgrade] && !ignore_level_upgrades)
 	) {
 		return 0;
@@ -485,18 +499,6 @@ int StoryStyleUpgradeHandler::handleCCOUpgrades(Upgrades upgrade, bool ignore_le
 
 		case Upgrades_SonicMysticMelody:
 			return Upgrades_ShadowMysticMelody;
-
-		case Upgrades_KnucklesShovelClaw:
-			return Upgrades_RougePickNails;
-
-		case Upgrades_KnucklesSunglasses:
-			return Upgrades_RougeTreasureScope;
-
-		case Upgrades_KnucklesHammerGloves:
-			return Upgrades_RougeIronBoots;
-
-		case Upgrades_KnucklesMysticMelody:
-			return Upgrades_RougeMysticMelody;
 
 		case Upgrades_SonicMagicGloves:
 		case Upgrades_SonicBounceBracelet:
