@@ -595,5 +595,9 @@ void SetCharacterPhysicsAndUpgrades(ObjectMaster* character, int a2) {
 
 void RestartLevel() {
 	hRestartLevel.Original();
-	UpgradeHandler.checkRestartUpgradeReset();
+
+	// This is the only gamestate when restarting.
+	if (GameState == GameStates_LoadFinished) {
+		UpgradeHandler.checkRestartUpgradeReset();
+	}
 }
