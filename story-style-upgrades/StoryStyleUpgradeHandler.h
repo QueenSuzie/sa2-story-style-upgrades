@@ -33,6 +33,7 @@ class StoryStyleUpgradeHandler {
 		bool disableSonicFlameRing = false;
 		bool enableUpgradeRestoreOnRestart = true;
 		bool isUpgradeResetButtonHeld = false;
+		bool alwaysRestoreOnRestart = false;
 		int upgradeResetButton = Buttons_Y;
 		int originalUpgrades = -1;
 
@@ -48,7 +49,7 @@ class StoryStyleUpgradeHandler {
 		void overwriteUpgradeItemComparison();
 
 	public:
-		void init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton);
+		void init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton, bool alwaysRestoreOnRestart);
 		void setLevelUpgrades();
 		void restoreLevelUpgrades();
 		void setUpgradeResetButtonState();

@@ -20,6 +20,9 @@
 			<Property name="UpgradeResetButton" type="Buttons" defaultvalue="Y" display="Upgrade Reset Button" alwaysinclude="true">
 				<HelpText>The button you need to be holding while restarting for the upgrades to be reset. Does nothing if "EnableUpgradeRestoreOnRestart" is false.</HelpText>
 			</Property>
+			<Property name="AlwaysRestoreOnRestart" type="bool" defaultvalue="False" display="Always Restore Upgrade on Restart" alwaysinclude="true">
+				<HelpText>When enabled your upgrades will be restored to the initial stage's state on every restart. This setting overrides the upgrade reset button behavior and will always restore your upgrades no matter what.</HelpText>
+			</Property>
 		</Group>
 	</Groups>
 	<Enums>

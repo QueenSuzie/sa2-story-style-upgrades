@@ -30,6 +30,7 @@ extern "C" {
 		bool disableAllShadowUpgrades = config->getBool("General", "DisableAllShadowUpgrades", false);
 		bool disableSonicFlameRing = config->getBool("General", "DisableSonicFlameRing", false);
 		bool enableUpgradeRestoreOnRestart = config->getBool("General", "EnableUpgradeRestoreOnRestart", false);
+		bool alwaysRestoreOnRestart = config->getBool("General", "AlwaysRestoreOnRestart", false);
 		std::string upgradeResetButton = config->getString("General", "UpgradeResetButton", "Y");
 		delete config;
 
@@ -37,7 +38,15 @@ extern "C" {
 			StoryStyleUpgradeHandler::CCODetected = true;
 		}
 
-		UpgradeHandler.init(includeCurrentLevelUpgrade, includeCurrentHuntingLevelUpgrade, disableAllShadowUpgrades, disableSonicFlameRing, enableUpgradeRestoreOnRestart, upgradeResetButton);
+		UpgradeHandler.init(
+			includeCurrentLevelUpgrade,
+			includeCurrentHuntingLevelUpgrade,
+			disableAllShadowUpgrades,
+			disableSonicFlameRing,
+			enableUpgradeRestoreOnRestart,
+			upgradeResetButton,
+			alwaysRestoreOnRestart
+		);
 	}
 
 	__declspec(dllexport) void __cdecl OnInput() {

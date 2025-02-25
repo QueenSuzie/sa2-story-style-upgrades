@@ -23,12 +23,13 @@
 FunctionHook<int, int> hUpgradeGet((intptr_t)LevelItem_Main);
 FunctionHook<void> hRestartLevel((intptr_t)0x43C370);
 
-void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton) {
+void StoryStyleUpgradeHandler::init(bool includeCurrentLevelUpgrade, bool includeCurrentHuntingLevelUpgrade, bool disableAllShadowUpgrades, bool disableSonicFlameRing, bool enableUpgradeRestoreOnRestart, std::string upgradeResetButton, bool alwaysRestoreOnRestart) {
 	this->includeCurrentLevelUpgrade = includeCurrentLevelUpgrade;
 	this->includeCurrentHuntingLevelUpgrade = includeCurrentHuntingLevelUpgrade;
 	this->disableAllShadowUpgrades = disableAllShadowUpgrades;
 	this->disableSonicFlameRing = disableSonicFlameRing;
 	this->enableUpgradeRestoreOnRestart = enableUpgradeRestoreOnRestart;
+	this->alwaysRestoreOnRestart = alwaysRestoreOnRestart;
 	this->setUpgradeResetButton(upgradeResetButton);
 
 	this->initUpgradeBitsToIndexes();
@@ -537,7 +538,7 @@ void StoryStyleUpgradeHandler::setUpgradeResetButtonState() {
 }
 
 void StoryStyleUpgradeHandler::checkRestartUpgradeReset() {
-	if (!this->isUpgradeResetButtonHeld || !this->enableUpgradeRestoreOnRestart) {
+	if (!this->alwaysRestoreOnRestart && (!this->isUpgradeResetButtonHeld || !this->enableUpgradeRestoreOnRestart)) {
 		return;
 	}
 
