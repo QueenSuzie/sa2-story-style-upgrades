@@ -45,6 +45,7 @@ class StoryStyleUpgradeHandler {
 		void initShadowUpgrades();
 		void initEggmanUpgrades();
 		void initRougeUpgrades();
+		bool isInvalidLevel();
 		void setUpgradeResetButton(std::string upgradeResetButton);
 		void overwriteUpgradeItemComparison();
 

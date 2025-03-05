@@ -510,9 +510,16 @@ int StoryStyleUpgradeHandler::handleCCOUpgrades(Upgrades upgrade, bool ignore_le
 	return 0;
 }
 
+bool StoryStyleUpgradeHandler::isInvalidLevel() {
+	return this->levelUpgrades.count(CurrentLevel) <= 0 ||
+		MainCharObj2[0] == NULL ||
+		MainCharObj2[1] != NULL ||
+		CurrentLevel == LevelIDs_Route101280;
+}
+
 void StoryStyleUpgradeHandler::setLevelUpgrades() {
-	if (this->levelUpgrades.count(CurrentLevel) <= 0 || MainCharObj2[0] == NULL || MainCharObj2[1] != NULL) {
-		return; // Invalid Level
+	if (this->isInvalidLevel()) {
+		return;
 	}
 
 	int upgrades = 0;
@@ -527,6 +534,10 @@ void StoryStyleUpgradeHandler::setLevelUpgrades() {
 }
 
 void StoryStyleUpgradeHandler::restoreLevelUpgrades() {
+	if (this->isInvalidLevel()) {
+		return;
+	}
+
 	MainCharObj2[0]->Upgrades = this->originalUpgrades;
 	for (Upgrades upgrade : this->characterUpgrades[CurrentCharacter]) {
 		StoryStyleUpgradeHandler::CharacterUpgradesGot[this->upgradesBitToIndexMap[upgrade]] = this->levelUpgrades[CurrentLevel][upgrade];
